@@ -38,7 +38,7 @@ class LearningListScreen extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Text(
-                'No words yet :(',
+                'Пока пусто :(',
                 style: GoogleFonts.montserrat( // Montserrat for empty state
                   fontSize: 24,
                   fontWeight: FontWeight.normal,

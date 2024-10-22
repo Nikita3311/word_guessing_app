@@ -29,7 +29,15 @@ class _PracticeScreenState extends State<PracticeScreen> {
     setState(() {
       learningWords = words;
     });
-    getRandomWord();  // Display a random word
+    if (learningWords.isNotEmpty) {
+      getRandomWord();  // Display a random word if there are words in the list
+    } else {
+      // If no words available, reset state
+      setState(() {
+        currentEnglishWord = '';
+        currentRussianTranslation = '';
+      });
+    }
   }
 
   // Function to get a random word and its translation from the learning list
@@ -40,11 +48,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
         currentEnglishWord = learningWords[randomIndex]['english'];
         currentRussianTranslation = learningWords[randomIndex]['russian'];
         showTranslation = false;  // Reset to show the English word when a new word is displayed
-      });
-    } else {
-      setState(() {
-        currentEnglishWord = 'No words available';
-        currentRussianTranslation = '';
       });
     }
   }
@@ -94,8 +97,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,76 +104,80 @@ class _PracticeScreenState extends State<PracticeScreen> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: learningWords.isEmpty  // Check if the list is empty
+              ? Center(  // Ensure the message is centered
+            child: Text(
+              'Нет слов для проверки :(',  // Message if no words available
+              style: GoogleFonts.montserrat(  // Apply Montserrat font
+                textStyle: TextStyle(fontSize: 24),
+              ),
+            ),
+          )
+              : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (currentEnglishWord.isNotEmpty) ...[
-                GestureDetector(
-                  onTap: showWordTranslation, // Show the translation when tapped
-                  child: SizedBox(
-                    width: 300,  // Fixed width for the card
-                    height: 150,  // Fixed height for the card
-                    child: Card(
-                      color: showTranslation ? Colors.blue : Colors.white,  // Change color if translation is shown
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Center(
-                        child: Text(
-                          showTranslation ? currentRussianTranslation : currentEnglishWord,  // Show translation if tapped
-                          style: GoogleFonts.montserrat(  // Apply Montserrat font
-                            textStyle: TextStyle(
-                              fontSize: 36,
-                              color: showTranslation ? Colors.white : Colors.black,  // Text color changes for better readability
-                            ),
+              GestureDetector(
+                onTap: showWordTranslation, // Show the translation when tapped
+                child: SizedBox(
+                  width: 300,  // Fixed width for the card
+                  height: 150,  // Fixed height for the card
+                  child: Card(
+                    color: showTranslation ? Colors.blue : Colors.white,  // Change color if translation is shown
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Center(
+                      child: Text(
+                        showTranslation
+                            ? currentEnglishWord
+                            : currentRussianTranslation,  // Show translation if tapped
+                        style: GoogleFonts.montserrat(  // Apply Montserrat font
+                          textStyle: TextStyle(
+                            fontSize: 36,
+                            color: showTranslation
+                                ? Colors.white
+                                : Colors.black,  // Text color changes for better readability
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Round button for "Wrong"
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.red,  // Red background
-                        shape: BoxShape.circle,  // Circle shape
-                      ),
-                      child: IconButton(
-                        onPressed: getRandomWord,
-                        icon: Icon(Icons.close, color: Colors.white),  // White icon
-                        iconSize: 30,  // Adjust icon size
-                        tooltip: 'Wrong',  // Tooltip for accessibility
-                      ),
+              ),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Round button for "Wrong"
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,  // Red background
+                      shape: BoxShape.circle,  // Circle shape
                     ),
-                    SizedBox(width: 70),  // Increased space between buttons
-                    // Round button for "Right"
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green,  // Green background
-                        shape: BoxShape.circle,  // Circle shape
-                      ),
-                      child: IconButton(
-                        onPressed: handleRightButton,
-                        icon: Icon(Icons.check, color: Colors.white),  // White icon
-                        iconSize: 30,  // Adjust icon size
-                        tooltip: 'Right',  // Tooltip for accessibility
-                      ),
+                    child: IconButton(
+                      onPressed: getRandomWord,
+                      icon: Icon(Icons.close, color: Colors.white),  // White icon
+                      iconSize: 30,  // Adjust icon size
+                      tooltip: 'Wrong',  // Tooltip for accessibility
                     ),
-                  ],
-                ),
-              ] else ...[
-                Text(
-                  'No words to practice yet.',
-                  style: GoogleFonts.montserrat(  // Apply Montserrat font
-                    textStyle: TextStyle(fontSize: 24),
                   ),
-                ),
-              ],
+                  SizedBox(width: 70),  // Increased space between buttons
+                  // Round button for "Right"
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green,  // Green background
+                      shape: BoxShape.circle,  // Circle shape
+                    ),
+                    child: IconButton(
+                      onPressed: handleRightButton,
+                      icon: Icon(Icons.check, color: Colors.white),  // White icon
+                      iconSize: 30,  // Adjust icon size
+                      tooltip: 'Right',  // Tooltip for accessibility
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

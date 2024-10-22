@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';  // Required for path management
 import '../database_helper.dart'; // Import the database helper
-import '../word_dictionary.dart';  // Import the main dictionary
-import '../learning_dictionary.dart';  // Import the learning dictionary
 import '../screens/learning_list_screen.dart';
 import '../screens/practice.dart';
 import 'package:google_fonts/google_fonts.dart';
